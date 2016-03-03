@@ -1,0 +1,2 @@
+'atom-workspace':
+  'ctrl-enter': 'juttle-viewer:run'
