@@ -8,14 +8,12 @@ class JuttleViewerView extends ScrollView
 
   constructor: (@editorId) ->
     super
-    juttleClient = new JuttleClient(atom.config.get('juttle-viewer.juttleServiceHost'))
-    @juttleClientView = new juttleClient.View(@element);
 
-    @juttleClientView.on 'error', (err) =>
-      @_showError(err)
+    @_haveShownInputsUnsupportedWarning = false
+    @juttleClientViews = new JuttleClient.Views(atom.config.get('juttle-viewer.juttleServiceHost'), @element)
 
-    @juttleClientView.on 'warning', (warn) =>
-      @_showWarning(warn)
+    @juttleClientViews.on 'error', @_showError
+    @juttleClientViews.on 'warning', @_showWarning
 
   _showError: (err) ->
     message = err?.info?.err?.message || err.message
@@ -37,7 +35,24 @@ class JuttleViewerView extends ScrollView
   getURI: ->
     return "juttle-viewer://editor/#{@editorId}"
 
+  destroy: ->
+    @juttleClientViews.stop()
+    @juttleClientViews.removeListeners('error', @_showError)
+    @juttleClientViews.removeListeners('warning', @_showWarning)
+
   run: ->
     text = @editorForId(@editorId).getText()
-    @juttleClientView.run({ program: text }).catch (err) =>
-      @_showError(err)
+    bundle = {
+      program: text
+    }
+    httpClient = new JuttleClient.HttpApi('http://' + atom.config.get('juttle-viewer.juttleServiceHost'))
+    httpClient.getInputs(bundle).then( (inputs) =>
+      if inputs.length > 0 && !@_haveShownInputsUnsupportedWarning
+        atom.notifications.addWarning('Inputs are currently not supported', {
+          dismissable: true,
+          detail: "Atom Juttle Viewer currently doesn't render inputs. Please set -default option to the value you want juttle to use for each input."
+        })
+        @_haveShownInputsUnsupportedWarning = true
+      @juttleClientViews.run(bundle)
+    ).catch (err) =>
+        @_showError(err)
