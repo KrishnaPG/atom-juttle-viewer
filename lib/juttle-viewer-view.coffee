@@ -37,8 +37,8 @@ class JuttleViewerView extends ScrollView
 
   destroy: ->
     @juttleClientViews.stop()
-    @juttleClientViews.removeListeners('error', @_showError)
-    @juttleClientViews.removeListeners('warning', @_showWarning)
+    @juttleClientViews.removeListener('error', @_showError)
+    @juttleClientViews.removeListener('warning', @_showWarning)
 
   run: ->
     text = @editorForId(@editorId).getText()
