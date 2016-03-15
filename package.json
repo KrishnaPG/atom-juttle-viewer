@@ -1,7 +1,7 @@
 {
   "name": "juttle-viewer",
   "main": "./lib/juttle-viewer",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Run juttle and view output in atom.",
   "keywords": [],
   "repository": "https://github.com/juttle/atom-juttle-viewer",
