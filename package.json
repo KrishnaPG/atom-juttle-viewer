@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "atom-space-pen-views": "^2.2.0",
-    "juttle-client-library": "^0.7.0"
+    "juttle-client-library": "^0.8.0"
   },
   "configSchema": {
     "juttleServiceHost": {
