@@ -6,6 +6,9 @@
   "keywords": [],
   "repository": "https://github.com/juttle/atom-juttle-viewer",
   "license": "Apache-2.0",
+  "scripts": {
+      "postinstall": "cp node_modules/juttle-client-library/dist/juttle-client-library.css styles/"
+  },
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
   },
